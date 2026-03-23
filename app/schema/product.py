@@ -56,4 +56,36 @@ class Product(BaseModel):
         
         return model
 
+    @computed_field
+
+    @property
+    def final_price(self) -> float:
+        return round(self.price * (1 - self.discountPercentage / 100), 2)
+
+class ProductUpdate(BaseModel):
+    title: str
+    description: str
+    category: str
+    price: float
+    discountPercentage: float
+    rating: float
+    stock: int
+    is_active: bool
+    tags: Annotated[
+        Optional[List[str]],
+        Field(default=None, max_length=10, description="Upto 10 tags"),
+    ]
+    brand: str
+    sku: Annotated[
+        str,
+        Field(
+            min_length=6,
+            max_length=30,
+            title="SKU",
+            description="Stock keeping unit",
+            examples=["grt-345-jdr-342", "rta-435-j78-lkf"],
+        ),
+    ]
+    weight: int
+
 

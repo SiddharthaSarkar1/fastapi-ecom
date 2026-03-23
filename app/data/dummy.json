@@ -1,0 +1,99 @@
+[
+  {
+    "id": 1,
+    "title": "Updated__string",
+    "description": "Updated__string",
+    "category": "Updated__string",
+    "price": 5999.0,
+    "discountPercentage": 80.0,
+    "rating": 1.0,
+    "stock": 9999,
+    "tags": [
+      "string"
+    ],
+    "brand": "Updated__string",
+    "sku": "nun-345-jdr-342",
+    "weight": 456,
+    "is_active": true
+  },
+  {
+    "id": 2,
+    "title": "string",
+    "description": "string",
+    "category": "string",
+    "price": 1000.0,
+    "discountPercentage": 40.0,
+    "rating": 5.0,
+    "stock": 200,
+    "is_active": true,
+    "tags": [
+      "string"
+    ],
+    "brand": "string",
+    "sku": "grt-345-jdr-342",
+    "weight": 0,
+    "createdAt": "2026-03-22T21:37:18.269000Z",
+    "final_price": 600.0,
+    "created_at": "2026-03-22T21:37:47.574300Z"
+  },
+  {
+    "id": 3,
+    "title": "string",
+    "description": "string",
+    "category": "string",
+    "price": 200.0,
+    "discountPercentage": 12.0,
+    "rating": 4.0,
+    "stock": 456,
+    "is_active": true,
+    "tags": [
+      "string"
+    ],
+    "brand": "string",
+    "sku": "gyu-345-jdr-345",
+    "weight": 0,
+    "createdAt": "2026-03-22T22:05:04.699000Z",
+    "final_price": 176.0,
+    "created_at": "2026-03-22T22:05:54.582331Z"
+  },
+  {
+    "id": 4,
+    "title": "4string",
+    "description": "s4tring",
+    "category": "4string",
+    "price": 1000.0,
+    "discountPercentage": 40.0,
+    "rating": 4.0,
+    "stock": 700,
+    "is_active": true,
+    "tags": [
+      "string"
+    ],
+    "brand": "4string",
+    "sku": "grt-345-raag-696",
+    "weight": 69,
+    "createdAt": "2026-03-23T20:55:11.708000Z",
+    "final_price": 600.0,
+    "created_at": "2026-03-23T20:55:59.405949Z"
+  },
+  {
+    "id": 5,
+    "title": "Updated__string",
+    "description": "Updated__string",
+    "category": "Updated__string",
+    "price": 5999.0,
+    "discountPercentage": 80.0,
+    "rating": 1.0,
+    "stock": 9999,
+    "is_active": true,
+    "tags": [
+      "string"
+    ],
+    "brand": "Updated__string",
+    "sku": "nun-345-jdr-342",
+    "weight": 456,
+    "createdAt": "2026-03-23T20:55:11.708000Z",
+    "final_price": 600.0,
+    "created_at": "2026-03-23T20:56:44.299553Z"
+  }
+]

@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from fastapi import FastAPI, HTTPException, Query, Path
-from service.product import get_all_products
-from schema.product import Product
+from service.product import get_all_products, add_product, remove_product, change_product
+from schema.product import Product, ProductUpdate
 
 app = FastAPI()
 
@@ -47,8 +49,7 @@ def list_products(
         description="Pagination offset",
     ),
 ):
-    data = get_all_products()
-    products = data["products"]
+    products = get_all_products()
 
     if name:
         needle = name.strip().lower()
@@ -79,8 +80,7 @@ def get_prodict_by_id(
         ..., ge=1, le=101, description="Id of the product", examples="1"
     )
 ):
-    data = get_all_products()
-    products = data["products"]
+    products = get_all_products()
 
     for product in products:
         if product["id"] == product_id:
@@ -94,7 +94,37 @@ def get_prodict_by_id(
 # POST Routes
 
 
-@app.post("/products")
-def add_products(product: Product):
-    print(product)
-    return product
+@app.post("/products", status_code=201)
+def create_products(product: Product):
+    product_dict = product.model_dump(mode="json")
+    products = get_all_products()
+    products_len = len(products)
+    product_dict["created_at"] = datetime.utcnow().isoformat() + "Z"
+    product_dict["id"] = int(products_len + 1)
+    try:
+        add_product(product_dict)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return product.model_dump(mode="json")
+
+# DELETE
+
+@app.delete("/products/{product_id}")
+def delete_product(product_id: int = Path(..., description="Product ID", examples="11")):
+    try:
+        res = remove_product(product_id)
+        return res
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.put('/products/{product_id}')
+def update_product(product_id: int, payload: ProductUpdate = ...):
+    try:
+        update_product = change_product(product_id, payload.model_dump(mode="json", exclude_unset=True))
+        return update_product
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+    
+
