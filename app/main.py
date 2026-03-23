@@ -1,15 +1,52 @@
 from datetime import datetime
+from typing import Dict, List
 
-from fastapi import FastAPI, HTTPException, Query, Path
-from service.product import get_all_products, add_product, remove_product, change_product
+from dotenv import load_dotenv
+import os
+
+from fastapi import Depends, FastAPI, HTTPException, Query, Path, Request
+from fastapi.responses import JSONResponse
+
+from service.product import (
+    get_all_products,
+    add_product,
+    remove_product,
+    change_product,
+    load_products,
+)
 from schema.product import Product, ProductUpdate
+
+load_dotenv()
 
 app = FastAPI()
 
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to FastAPI."}
+# Middleware
+@app.middleware("http")
+async def lifecycle(request: Request, call_next):
+    print("Before Request!!!")
+    response = await call_next(request)
+    print("After Request!!!")
+    return response
+
+
+def common_logic():
+    print("This is common logic.")
+    return "This is common logic."
+
+
+@app.get("/", response_model=Dict)
+def root(dep=Depends(common_logic)):
+    DB_PATH = os.getenv("BASE_URL")
+    # return {"message": "Welcome to FastAPI.", "dependency": dep, "data_path": DB_PATH}
+    return JSONResponse(
+        status_code=200,
+        content={
+            "message": "Welcome to FastAPI.",
+            "dependency": dep,
+            "data_path": DB_PATH,
+        },
+    )
 
 
 @app.get("/dummy-products/{id}")
@@ -18,9 +55,10 @@ def get_dummy_product(id: int):
     return products[id]
 
 
-@app.get("/all-products")
-def get_all_the_products():
-    return get_all_products()
+@app.get("/all-products", response_model=List[Dict])
+def get_all_the_products(dep=Depends(load_products)):  # dep is dependency injection
+    # return get_all_products()
+    return dep
 
 
 # /products?name="XYZ"....
@@ -108,23 +146,30 @@ def create_products(product: Product):
 
     return product.model_dump(mode="json")
 
+
 # DELETE
 
+
 @app.delete("/products/{product_id}")
-def delete_product(product_id: int = Path(..., description="Product ID", examples="11")):
+def delete_product(
+    product_id: int = Path(..., description="Product ID", examples="11")
+):
     try:
         res = remove_product(product_id)
         return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.put('/products/{product_id}')
+
+# Update
+
+
+@app.put("/products/{product_id}")
 def update_product(product_id: int, payload: ProductUpdate = ...):
     try:
-        update_product = change_product(product_id, payload.model_dump(mode="json", exclude_unset=True))
+        update_product = change_product(
+            product_id, payload.model_dump(mode="json", exclude_unset=True)
+        )
         return update_product
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-
-    
-
